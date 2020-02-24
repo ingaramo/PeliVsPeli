@@ -7,6 +7,9 @@ const puerto = '8080';
 let app = express();
 app.use(cors());
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 app.use(bodyParser.json());
 
 app.listen(puerto, function(){
@@ -20,4 +23,6 @@ app.post("/competencias/:idCompetencia/voto",controlador.validarCompetencia,
                                              controlador.setVoto);
 
 app.get("/competencias/:idCompetencia/peliculas",controlador.validarCompetencia,controlador.getOpciones);
+
+app.get("/competencias/:idCompetencia/resultados",controlador.getResultados);
 

@@ -88,11 +88,6 @@ function validarCompetencia(rq,res,next){
     );
 }
 function validarPelicula(rq,res,next){
-    console.log(rq.url)
-    console.log(rq.query)
-    console.log("pelicula")
-    console.log(rq.body)
-    console.log(`select * from pelicula WHERE id= ${rq.body.idPelicula}`)
     connection.query(`select * from pelicula WHERE id= ${rq.body.idPelicula}`, function(error, result){
         
         if(error || result.length === 0){
@@ -103,11 +98,31 @@ function validarPelicula(rq,res,next){
     }
     );
 }
+function getResultados(rq,res,next){
+    let query = `select pelicula_id , count(*)as cant_votos from competencias_pelicula 
+    WHERE competencia_id= ${rq.params.idCompetencia}
+    group by pelicula_id
+    order by count(*) desc
+    limit 3`
+    connection.query(query, function(error, result){
+        
+        if(error || result.length === 0){
+            console.log('Error: '+ error);
+            res.status(404).send('Error en la consulta en BD');
+        }
+        else {
+            
+        }
+    }
+    );
+}
+
 
 module.exports={
     getOpciones: getOpciones,
     getCompetencias: getCompetencias,
     validarCompetencia: validarCompetencia,
     validarPelicula: validarPelicula,
-    setVoto:setVoto
+    setVoto: setVoto,
+    getResultados: getResultados,
 }
