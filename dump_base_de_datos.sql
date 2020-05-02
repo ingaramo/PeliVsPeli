@@ -1,18 +1,3 @@
--- modificacion de BD
-USE `competencias`;
-
-CREATE TABLE `competencias_pelicula` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `competencia_id` int(11) NOT NULL ,
-  `pelicula_id` int(11) NOT NULL ,
-  `votos` int default 0,
-  PRIMARY KEY (`id`),
-  CONSTRAINT fk_competencia FOREIGN KEY (competencia_id)
-  REFERENCES competencias(id) /*,
-  CONSTRAINT fk_peliculas FOREIGN KEY (pelicula_id)
-  REFERENCES pelicula(id)*/
-  -- esta constraint no funciona 
-);
 
 --
 DROP DATABASE IF EXISTS `competencias`;
@@ -117,11 +102,28 @@ UNLOCK TABLES;
 
 
 
+-- modificacion de BD
+USE `competencias`;
+
+DROP TABLE IF EXISTS `competencias`;
 CREATE TABLE `competencias` (
   `id` int(11)  NOT NULL AUTO_INCREMENT,
   `nombre` varchar(90) NOT NULL,
   PRIMARY KEY (`id`)
-  );
+);
+
+DROP TABLE IF EXISTS `competencias_pelicula`;
+CREATE TABLE `competencias_pelicula` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `competencia_id` int(11) NOT NULL ,
+  `pelicula_id` int(11) unsigned NOT NULL ,
+  `votos` int default 0,
+  PRIMARY KEY (`id`),
+  CONSTRAINT fk_competencia FOREIGN KEY (competencia_id)
+  REFERENCES competencias(id),
+  CONSTRAINT fk_peliculas FOREIGN KEY (pelicula_id)
+  REFERENCES pelicula(id)
+);
   
   INSERT INTO competencias (nombre) VALUES
 	('¿Cual es mejor comedia?'),
@@ -129,3 +131,10 @@ CREATE TABLE `competencias` (
 	('¿Cual es peor?'),
 	('¿Cual es mejor?'),
 	('¿Cual da mas miedo?');
+
+  alter table competencias add genero_id int unsigned;
+  ALTER TABLE competencias add FOREIGN KEY (genero_id) REFERENCES genero(id);
+  alter table competencias add director_id int unsigned;
+  alter table competencias add FOREIGN KEY (director_id) REFERENCES director(id);
+  alter table competencias add actor_id int unsigned;
+  alter table competencias add FOREIGN KEY (actor_id) REFERENCES actor(id);
